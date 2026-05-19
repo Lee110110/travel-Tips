@@ -1,0 +1,68 @@
+{
+  "pages": [
+    "pages/nearby/nearby",
+    "pages/depart/depart",
+    "pages/buddy/buddy",
+    "pages/mine/mine",
+    "pages/city-detail/city-detail",
+    "pages/buddy-create/buddy-create",
+    "pages/buddy-detail/buddy-detail",
+    "pages/history/history",
+    "pages/favorites/favorites",
+    "pages/about/about",
+    "pages/my-travel/my-travel",
+    "pages/my-messages/my-messages",
+    "pages/travel-guide/travel-guide"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#FF6B35",
+    "backgroundColor": "#FFFAF5",
+    "backgroundTextStyle": "dark",
+    "navigationBarTitleText": "旅游Tips"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B35",
+    "borderStyle": "white",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/nearby/nearby",
+        "text": "周边游",
+        "iconPath": "static/tab-nearby.png",
+        "selectedIconPath": "static/tab-nearby-active.png"
+      },
+      {
+        "pagePath": "pages/depart/depart",
+        "text": "出发",
+        "iconPath": "static/tab-dice.png",
+        "selectedIconPath": "static/tab-dice-active.png"
+      },
+      {
+        "pagePath": "pages/buddy/buddy",
+        "text": "搭子",
+        "iconPath": "static/tab-buddy.png",
+        "selectedIconPath": "static/tab-buddy-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/tab-mine.png",
+        "selectedIconPath": "static/tab-mine-active.png"
+      }
+    ]
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
+  "permission": {
+    "scope.writePhotosAlbum": {
+      "desc": "保存分享海报到相册"
+    },
+    "scope.userLocation": {
+      "desc": "用于显示周边城市和景点信息"
+    }
+  },
+  "usingComponents": {}
+}

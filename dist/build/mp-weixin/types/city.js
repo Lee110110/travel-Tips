@@ -1,0 +1,1 @@
+"use strict";exports.CITY_REGION_LABELS={all:"全部",domestic:"国内",international:"国外"},exports.CITY_TYPE_LABELS={beach:"海滩",mountain:"山岳",city:"都市",historical:"历史",nature:"自然",foodie:"美食",romantic:"浪漫",adventure:"探险",desert:"沙漠",grassland:"草原",forest:"森林"};

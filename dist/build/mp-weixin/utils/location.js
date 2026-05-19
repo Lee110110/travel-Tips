@@ -1,0 +1,1 @@
+"use strict";const e=require("../common/vendor.js");exports.getUserLocation=function(){return new Promise((t,o)=>{e.index.getLocation({type:"gcj02",success:e=>{t({latitude:e.latitude,longitude:e.longitude,timestamp:Date.now()})},fail:e=>{o(e)}})})};

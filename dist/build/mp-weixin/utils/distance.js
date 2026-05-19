@@ -1,0 +1,1 @@
+"use strict";function t(t){return t*(Math.PI/180)}exports.formatDistance=function(t){return t<1?`${Math.round(1e3*t)}m`:t<100?`${t.toFixed(1)}km`:`${Math.round(t)}km`},exports.haversineDistance=function(n,a,s,r){const h=t(s-n),e=t(r-a),i=Math.sin(h/2)*Math.sin(h/2)+Math.cos(t(n))*Math.cos(t(s))*Math.sin(e/2)*Math.sin(e/2);return 6371*(2*Math.atan2(Math.sqrt(i),Math.sqrt(1-i)))};

@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx uni *)",
+      "Bash(powershell -Command \"Get-ChildItem -Path 'dist\\\\build\\\\mp-weixin' -Recurse -File | Select-Object FullName, Length | Format-Table -AutoSize\")",
+      "Bash(npm run *)",
+      "Bash(Get-Content \"C:\\\\Users\\\\Elvis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Elvis-random-travel\\\\06dc0acb-e8e8-4f96-a10b-f9a38fb7bbac\\\\tasks\\\\b5q01e8f9.output\" -Tail 30)",
+      "Bash(timeout 20)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\" http://localhost:5173/)",
+      "Bash(curl -sI http://localhost:5173/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\" http://localhost:5174/)",
+      "Bash(curl -s http://localhost:5174/)",
+      "Bash(curl -sv http://localhost:5174/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\" http://localhost:5175/)",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":5173 :5174\")",
+      "Bash(findstr LISTENING)",
+      "Bash(taskkill //F //PID 26884)",
+      "Bash(taskkill //F //PID 23652)",
+      "Bash(python -c \"print\\('ok'\\)\")",
+      "Bash(py -c \"print\\('ok'\\)\")",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

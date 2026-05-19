@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "出发",
+  "usingComponents": {
+    "spin-wheel": "../../components/SpinWheel/SpinWheel",
+    "filter-bar": "../../components/FilterBar/FilterBar",
+    "celebration-effect": "../../components/CelebrationEffect/CelebrationEffect"
+  }
+}

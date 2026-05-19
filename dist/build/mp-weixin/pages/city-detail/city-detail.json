@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "城市详情",
+  "navigationBarBackgroundColor": "#FF6B35",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "attraction-list": "../../components/AttractionList/AttractionList",
+    "food-list": "../../components/FoodList/FoodList"
+  }
+}

@@ -1,0 +1,1 @@
+const a={beach:"海滩",mountain:"山岳",city:"都市",historical:"历史",nature:"自然",foodie:"美食",romantic:"浪漫",adventure:"探险",desert:"沙漠",grassland:"草原",forest:"森林"},t={all:"全部",domestic:"国内",international:"国外"};export{t as C,a};

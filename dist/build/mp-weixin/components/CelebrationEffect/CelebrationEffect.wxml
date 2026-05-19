@@ -1,0 +1,1 @@
+<view wx:if="{{a}}" class="celebration data-v-f198fcb7"><view wx:for="{{b}}" wx:for-item="p" wx:key="a" class="particle data-v-f198fcb7" style="{{'background-color:' + p.b + ';' + ('left:' + p.c) + ';' + ('width:' + p.d) + ';' + ('height:' + p.e) + ';' + ('animation-duration:' + p.f) + ';' + ('animation-delay:' + p.g) + ';' + ('--drift:' + p.h)}}"/></view>

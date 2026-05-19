@@ -1,0 +1,143 @@
+{
+  "pages": [
+    {
+      "path": "pages/nearby/nearby",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "周边游"
+      }
+    },
+    {
+      "path": "pages/depart/depart",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "出发"
+      }
+    },
+    {
+      "path": "pages/buddy/buddy",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "搭子"
+      }
+    },
+    {
+      "path": "pages/mine/mine",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/city-detail/city-detail",
+      "style": {
+        "navigationBarTitleText": "城市详情",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/buddy-create/buddy-create",
+      "style": {
+        "navigationBarTitleText": "创建队伍",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/buddy-detail/buddy-detail",
+      "style": {
+        "navigationBarTitleText": "队伍详情",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/history/history",
+      "style": {
+        "navigationBarTitleText": "历史记录",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/favorites/favorites",
+      "style": {
+        "navigationBarTitleText": "收藏",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/about/about",
+      "style": {
+        "navigationBarTitleText": "关于",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/my-travel/my-travel",
+      "style": {
+        "navigationBarTitleText": "我的旅行规划",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/my-messages/my-messages",
+      "style": {
+        "navigationBarTitleText": "我的消息",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/travel-guide/travel-guide",
+      "style": {
+        "navigationBarTitleText": "AI旅行指南",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#FF6B35",
+    "backgroundColor": "#FFFAF5",
+    "backgroundTextStyle": "dark",
+    "navigationBarTitleText": "旅游Tips"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#FF6B35",
+    "borderStyle": "white",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/nearby/nearby",
+        "text": "周边游",
+        "iconPath": "static/tab-nearby.png",
+        "selectedIconPath": "static/tab-nearby-active.png"
+      },
+      {
+        "pagePath": "pages/depart/depart",
+        "text": "出发",
+        "iconPath": "static/tab-dice.png",
+        "selectedIconPath": "static/tab-dice-active.png"
+      },
+      {
+        "pagePath": "pages/buddy/buddy",
+        "text": "搭子",
+        "iconPath": "static/tab-buddy.png",
+        "selectedIconPath": "static/tab-buddy-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/tab-mine.png",
+        "selectedIconPath": "static/tab-mine-active.png"
+      }
+    ]
+  }
+}
