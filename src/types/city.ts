@@ -140,6 +140,29 @@ export interface WeatherInfo {
   suggestion: string
 }
 
+export interface DailyForecast {
+  date: string
+  weekDay: string
+  textDay: string
+  tempMin: number
+  tempMax: number
+  humidity: number
+  windScale: string
+}
+
+export interface SceneEquipment {
+  scene: string
+  label: string
+  items: LuggageItem[]
+}
+
+export interface DestinationAlert {
+  type: 'plug' | 'culture' | 'visa' | 'health' | 'currency'
+  title: string
+  description: string
+  icon: string
+}
+
 export interface TravelGuide {
   teamId: string
   destination: string
@@ -147,8 +170,11 @@ export interface TravelGuide {
   returnTime: number
   memberCount: number
   weather: WeatherInfo
+  dailyForecast: DailyForecast[]
   luggageList: LuggageItem[]
   mustBring: string[]
+  sceneEquipments: SceneEquipment[]
+  alerts: DestinationAlert[]
   tips: string[]
   generatedAt: number
 }

@@ -44,7 +44,7 @@ onShareAppMessage(() => {
     }
   }
   return {
-    title: '旅游Tips - 让命运选择你的下一站',
+    title: '搭伴 - 让命运选择你的下一站',
     path: '/pages/depart/depart',
   }
 })
@@ -70,6 +70,10 @@ function spinAgain() {
 
 function viewDetail(city: City) {
   uni.navigateTo({ url: `/pages/city-detail/city-detail?id=${city.id}` })
+}
+
+function createTeam(city: City) {
+  uni.navigateTo({ url: `/pages/buddy-create/buddy-create?destination=${encodeURIComponent(city.name)}` })
 }
 
 function toggleFavorite(city: City) {
@@ -152,6 +156,11 @@ function isFavorite(city: City): boolean {
             </view>
             <view class="btn btn-secondary" @tap="spinAgain">
               <text class="btn-text-secondary">再抽一次</text>
+            </view>
+          </view>
+          <view class="result-actions" style="margin-top: 16rpx;">
+            <view class="btn btn-team" @tap="createTeam(cityStore.selectedCity)">
+              <text class="btn-text-team">创建队伍</text>
             </view>
             <view class="btn-fav" @tap="toggleFavorite(cityStore.selectedCity)">
               <text class="fav-icon">{{ isFavorite(cityStore.selectedCity) ? '♥' : '♡' }}</text>
@@ -369,6 +378,11 @@ function isFavorite(city: City): boolean {
   background-color: transparent;
 }
 
+.btn-team {
+  flex: 1;
+  background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+}
+
 .btn-text {
   font-size: 28rpx;
   font-weight: 600;
@@ -379,6 +393,12 @@ function isFavorite(city: City): boolean {
   font-size: 28rpx;
   font-weight: 600;
   color: #FF6B35;
+}
+
+.btn-text-team {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 .btn-fav {

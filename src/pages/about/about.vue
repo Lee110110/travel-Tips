@@ -43,9 +43,9 @@ const badges = computed(() => {
       <view class="app-icon">
         <text class="app-icon-text">🎲</text>
       </view>
-      <text class="app-name">旅游Tips</text>
-      <text class="app-version">v1.0.0</text>
-      <text class="app-desc">让命运选择你的下一站旅行目的地</text>
+      <text class="app-name">搭伴</text>
+      <text class="app-version">v1.1.0</text>
+      <text class="app-desc">找搭子，备行囊，说走就走</text>
     </view>
 
     <!-- Stats -->

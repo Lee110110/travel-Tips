@@ -40,6 +40,12 @@ export const useBuddyStore = defineStore('buddy', () => {
     return guide
   }
 
+  function generateGuideOnly(team: BuddyTeam): TravelGuide {
+    const guide = generateTravelGuide(team)
+    guideMap.value[team.id] = guide
+    return guide
+  }
+
   function getGuide(teamId: string): TravelGuide | undefined {
     return guideMap.value[teamId]
   }
@@ -68,6 +74,7 @@ export const useBuddyStore = defineStore('buddy', () => {
     createTeam,
     applyJoin,
     closeTeamAndGenerateGuide,
+    generateGuideOnly,
     getGuide,
     loadMyTeams,
     loadMyApplications,

@@ -9,6 +9,7 @@ const team = ref<BuddyTeam | null>(null)
 const showApplyModal = ref(false)
 const applyMessage = ref('')
 const closing = ref(false)
+const generating = ref(false)
 
 onLoad((options) => {
   if (options?.id) {
@@ -63,13 +64,27 @@ function viewGuide() {
   uni.navigateTo({ url: `/pages/travel-guide/travel-guide?teamId=${team.value.id}` })
 }
 
+async function generateGuide() {
+  if (!team.value) return
+  generating.value = true
+  try {
+    buddyStore.generateGuideOnly(team.value)
+    uni.showToast({ title: '出行清单已生成', icon: 'success' })
+    setTimeout(() => {
+      viewGuide()
+    }, 1000)
+  } finally {
+    generating.value = false
+  }
+}
+
 function closeModal() {
   showApplyModal.value = false
 }
 
 onShareAppMessage(() => {
   if (!team.value) {
-    return { title: '旅游Tips — 找搭子一起旅行', path: '/pages/buddy/buddy' }
+    return { title: '搭伴 — 找搭子一起旅行', path: '/pages/buddy/buddy' }
   }
   return {
     title: `${team.value.name} | ${team.value.departure}→${team.value.destination}，快来一起出发！`,
@@ -155,6 +170,9 @@ onShareAppMessage(() => {
           <button class="share-btn" open-type="share">
             <text class="share-btn-text">分享</text>
           </button>
+        </view>
+        <view class="guide-gen-btn" :class="{ disabled: generating }" @tap="generateGuide">
+          <text class="guide-gen-text">{{ generating ? '生成中...' : '生成出行清单' }}</text>
         </view>
         <view class="close-btn" :class="{ disabled: closing }" @tap="closeTeam">
           <text class="close-text">{{ closing ? '处理中...' : '关闭组队' }}</text>
@@ -424,6 +442,24 @@ onShareAppMessage(() => {
 
 .close-btn.disabled {
   opacity: 0.6;
+}
+
+.guide-gen-btn {
+  flex: 1;
+  padding: 24rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+  text-align: center;
+}
+
+.guide-gen-btn.disabled {
+  opacity: 0.6;
+}
+
+.guide-gen-text {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #FFFFFF;
 }
 
 .apply-text, .close-text {

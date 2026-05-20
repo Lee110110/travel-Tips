@@ -9,7 +9,7 @@ export function getShareMessage(city: City | null) {
     }
   }
   return {
-    title: '旅游Tips - 让命运选择你的下一站',
+    title: '搭伴 - 让命运选择你的下一站',
     path: '/pages/depart/depart',
   }
 }

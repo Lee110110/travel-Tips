@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 import { useBuddyStore } from '@/stores/buddy'
 
 const buddyStore = useBuddyStore()
@@ -13,6 +14,12 @@ const form = ref({
   maxMembers: 6,
   needApproval: true,
   description: '',
+})
+
+onLoad((query) => {
+  if (query?.destination) {
+    form.value.destination = decodeURIComponent(query.destination)
+  }
 })
 
 const submitting = ref(false)

@@ -1,9 +1,9 @@
 {
-  "name": "旅游Tips",
-  "appid": "__UNI__RANDOM_TRAVEL",
-  "description": "让命运选择你的下一站旅行目的地",
-  "versionName": "1.0.0",
-  "versionCode": "100",
+  "name": "搭伴",
+  "appid": "__UNI__DABAN",
+  "description": "找搭子，备行囊，说走就走",
+  "versionName": "1.1.0",
+  "versionCode": "110",
   "transformPx": false,
   "mp-weixin": {
     "appid": "",

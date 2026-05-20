@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app'
 import { useBuddyStore } from '@/stores/buddy'
-import type { TravelGuide, LuggageItem } from '@/types/city'
+import type { TravelGuide, LuggageItem, DestinationAlert } from '@/types/city'
+import { getWeatherIcon } from '@/services/travel-guide'
 
 const buddyStore = useBuddyStore()
 const guide = ref<TravelGuide | null>(null)
+const teamId = ref('')
 
 const CATEGORY_LABELS: Record<LuggageItem['category'], string> = {
   clothing: '衣物', electronics: '电子', toiletry: '洗漱',
@@ -16,10 +18,53 @@ const CATEGORY_ICONS: Record<LuggageItem['category'], string> = {
   medicine: '💊', document: '📋', other: '🎒',
 }
 
+const ALERT_TYPE_LABELS: Record<DestinationAlert['type'], string> = {
+  plug: '插头/电压',
+  culture: '文化禁忌',
+  visa: '签证提醒',
+  health: '健康安全',
+  currency: '货币/支付',
+}
+
+const ALERT_TYPE_COLORS: Record<DestinationAlert['type'], string> = {
+  plug: '#6C5CE7',
+  culture: '#E17055',
+  visa: '#FDCB6E',
+  health: '#00B894',
+  currency: '#0984E3',
+}
+
+function loadGuide() {
+  if (!teamId.value) return
+  // Always regenerate to get fresh daily forecast
+  const team = buddyStore.teamList.find(t => t.id === teamId.value)
+    || buddyStore.myTeams.find(t => t.id === teamId.value)
+  if (team) {
+    buddyStore.generateGuideOnly(team)
+    guide.value = buddyStore.getGuide(teamId.value) || null
+  } else {
+    guide.value = buddyStore.getGuide(teamId.value) || null
+  }
+}
+
 onLoad((options) => {
   if (options?.teamId) {
-    guide.value = buddyStore.getGuide(options.teamId) || null
+    teamId.value = options.teamId
   }
+})
+
+onShow(() => {
+  loadGuide()
+})
+
+onShareAppMessage(() => {
+  if (guide.value) {
+    return {
+      title: `${guide.value.destination}出行指南 - AI旅行助手`,
+      path: `/pages/travel-guide/travel-guide?teamId=${guide.value.teamId}`,
+    }
+  }
+  return { title: 'AI旅行指南 - 搭伴', path: '/pages/buddy/buddy' }
 })
 
 const groupedLuggage = computed(() => {
@@ -46,6 +91,16 @@ const dateRange = computed(() => {
   }
   return `${fmt(guide.value.departureTime)} - ${fmt(guide.value.returnTime)}`
 })
+
+// Scene equipment items split into primary (essential) and secondary
+const sceneEqDisplay = computed(() => {
+  if (!guide.value) return []
+  return guide.value.sceneEquipments.map(eq => {
+    const primary = eq.items.filter(i => i.essential)
+    const secondary = eq.items.filter(i => !i.essential)
+    return { ...eq, primary, secondary }
+  })
+})
 </script>
 
 <template>
@@ -57,6 +112,9 @@ const dateRange = computed(() => {
         <text class="ai-title">AI 旅行助手</text>
         <text class="ai-desc">已为{{ guide.memberCount }}人小队生成出行指南</text>
       </view>
+      <button class="share-btn" open-type="share">
+        <text class="share-btn-icon">↗</text>
+      </button>
     </view>
 
     <!-- Destination Summary -->
@@ -82,6 +140,20 @@ const dateRange = computed(() => {
           <text class="suggestion-text">💡 {{ guide.weather.suggestion }}</text>
         </view>
       </view>
+      <!-- Daily Forecast -->
+      <view v-if="guide.dailyForecast.length > 0" class="daily-forecast">
+        <view class="forecast-scroll">
+          <view v-for="(day, i) in guide.dailyForecast" :key="i" class="forecast-day">
+            <text class="forecast-date">{{ day.date }}</text>
+            <text class="forecast-week">{{ day.weekDay }}</text>
+            <text class="forecast-icon">{{ getWeatherIcon(day.textDay) }}</text>
+            <text class="forecast-text">{{ day.textDay }}</text>
+            <text class="forecast-temp">{{ day.tempMin }}°/{{ day.tempMax }}°</text>
+            <text class="forecast-humidity">💧{{ day.humidity }}%</text>
+            <text class="forecast-wind">{{ day.windScale }}</text>
+          </view>
+        </view>
+      </view>
     </view>
 
     <!-- Must Bring -->
@@ -94,6 +166,67 @@ const dateRange = computed(() => {
         <view v-for="(item, i) in guide.mustBring" :key="i" class="must-bring-item">
           <text class="must-bullet">❗</text>
           <text class="must-text">{{ item }}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Scene Equipment -->
+    <view v-if="guide.sceneEquipments.length > 0" class="section">
+      <view class="section-header">
+        <text class="section-icon">🎯</text>
+        <text class="section-title">场景装备推荐</text>
+      </view>
+      <view v-for="eq in sceneEqDisplay" :key="eq.scene" class="scene-eq-card">
+        <view class="scene-eq-header">
+          <text class="scene-eq-label">{{ eq.label }}</text>
+        </view>
+        <view class="scene-eq-items">
+          <view v-for="item in eq.primary" :key="item.name" class="scene-eq-item primary">
+            <view class="scene-eq-check">
+              <text class="check-icon">☐</text>
+            </view>
+            <view class="item-info">
+              <text class="item-name">{{ item.name }}</text>
+              <text v-if="item.note" class="item-note">{{ item.note }}</text>
+            </view>
+            <view class="essential-badge">
+              <text class="essential-text">必带</text>
+            </view>
+          </view>
+          <view v-if="eq.secondary.length > 0" class="secondary-divider">
+            <text class="secondary-label">选带</text>
+          </view>
+          <view v-for="item in eq.secondary" :key="item.name" class="scene-eq-item secondary">
+            <view class="scene-eq-check">
+              <text class="check-icon">☐</text>
+            </view>
+            <view class="item-info">
+              <text class="item-name secondary-name">{{ item.name }}</text>
+              <text v-if="item.note" class="item-note">{{ item.note }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Destination Alerts -->
+    <view v-if="guide.alerts.length > 0" class="section">
+      <view class="section-header">
+        <text class="section-icon">🛡</text>
+        <text class="section-title">目的地出行提醒</text>
+      </view>
+      <view class="alert-list">
+        <view v-for="(alert, i) in guide.alerts" :key="i" class="alert-card">
+          <view class="alert-top">
+            <text class="alert-icon">{{ alert.icon }}</text>
+            <view class="alert-header-info">
+              <text class="alert-title">{{ alert.title }}</text>
+              <view class="alert-type-tag" :style="{ backgroundColor: ALERT_TYPE_COLORS[alert.type] + '15', borderColor: ALERT_TYPE_COLORS[alert.type] }">
+                <text class="alert-type-text" :style="{ color: ALERT_TYPE_COLORS[alert.type] }">{{ ALERT_TYPE_LABELS[alert.type] }}</text>
+              </view>
+            </view>
+          </view>
+          <text class="alert-desc">{{ alert.description }}</text>
         </view>
       </view>
     </view>
@@ -127,7 +260,7 @@ const dateRange = computed(() => {
       </view>
     </view>
 
-    <!-- Tips -->
+    <!-- Tips (after scene equipment) -->
     <view v-if="guide.tips.length > 0" class="section">
       <view class="section-header">
         <text class="section-icon">💡</text>
@@ -173,6 +306,30 @@ const dateRange = computed(() => {
 
 .ai-info {
   flex: 1;
+}
+
+.share-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  line-height: 1;
+}
+
+.share-btn::after {
+  border: none;
+}
+
+.share-btn-icon {
+  font-size: 32rpx;
+  color: #FFFFFF;
+  font-weight: 700;
 }
 
 .ai-title {
@@ -291,6 +448,68 @@ const dateRange = computed(() => {
   line-height: 1.6;
 }
 
+/* Daily Forecast */
+.daily-forecast {
+  margin-top: 20rpx;
+}
+
+.forecast-scroll {
+  display: flex;
+  gap: 16rpx;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8rpx;
+}
+
+.forecast-day {
+  flex-shrink: 0;
+  width: 160rpx;
+  background-color: var(--bg-card);
+  border-radius: 16rpx;
+  padding: 20rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.forecast-date {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.forecast-week {
+  font-size: 20rpx;
+  color: var(--text-hint);
+}
+
+.forecast-icon {
+  font-size: 40rpx;
+  margin: 4rpx 0;
+}
+
+.forecast-text {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+
+.forecast-temp {
+  font-size: 22rpx;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.forecast-humidity {
+  font-size: 20rpx;
+  color: var(--text-hint);
+}
+
+.forecast-wind {
+  font-size: 20rpx;
+  color: var(--text-hint);
+}
+
 .must-bring-list {
   background-color: var(--bg-card);
   border-radius: 16rpx;
@@ -398,6 +617,128 @@ const dateRange = computed(() => {
   font-size: 18rpx;
   color: #FFFFFF;
   font-weight: 600;
+}
+
+/* Scene Equipment */
+.scene-eq-card {
+  background-color: var(--bg-card);
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-bottom: 16rpx;
+}
+
+.scene-eq-header {
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+}
+
+.scene-eq-label {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.scene-eq-items {
+  padding: 0 24rpx;
+}
+
+.scene-eq-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.scene-eq-item:last-child {
+  border-bottom: none;
+}
+
+.scene-eq-item.secondary {
+  padding: 14rpx 0;
+}
+
+.secondary-name {
+  color: var(--text-secondary);
+  font-size: 26rpx;
+}
+
+.secondary-divider {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0 4rpx;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.secondary-label {
+  font-size: 20rpx;
+  color: var(--text-hint);
+  padding: 2rpx 12rpx;
+  border-radius: 999rpx;
+  background-color: var(--bg-secondary);
+}
+
+.scene-eq-check {
+  flex-shrink: 0;
+}
+
+/* Destination Alerts */
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.alert-card {
+  background-color: var(--bg-card);
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  border-left: 6rpx solid #6C5CE7;
+}
+
+.alert-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.alert-icon {
+  font-size: 32rpx;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+}
+
+.alert-header-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.alert-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.alert-type-tag {
+  padding: 2rpx 12rpx;
+  border-radius: 999rpx;
+  border: 1rpx solid;
+}
+
+.alert-type-text {
+  font-size: 18rpx;
+  font-weight: 600;
+}
+
+.alert-desc {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-left: 44rpx;
 }
 
 .tips-list {

@@ -30,7 +30,7 @@ onPageScroll((e) => {
 
 onShareAppMessage(() => {
   if (!city.value) {
-    return { title: '旅游Tips', path: '/pages/index/index' }
+    return { title: '搭伴', path: '/pages/index/index' }
   }
   return {
     title: `我随机抽到了${city.value.name}，一起去旅行吧！`,

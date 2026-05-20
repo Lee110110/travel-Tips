@@ -51,7 +51,7 @@ async function generatePoster() {
     ctx.setFontSize(24)
     ctx.setFillStyle('rgba(255, 255, 255, 0.6)')
     ctx.setTextAlign('center')
-    ctx.fillText('旅游Tips', w / 2, h - 100)
+    ctx.fillText('搭伴', w / 2, h - 100)
 
     // Decorative line
     ctx.setStrokeStyle('rgba(255, 255, 255, 0.3)')

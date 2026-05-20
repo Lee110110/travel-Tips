@@ -20,7 +20,12 @@
       "Bash(taskkill //F //PID 23652)",
       "Bash(python -c \"print\\('ok'\\)\")",
       "Bash(py -c \"print\\('ok'\\)\")",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(Start-Sleep -Seconds 8)",
+      "Bash(Get-Content \"C:\\\\Users\\\\Elvis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Elvis-random-travel\\\\a73f4bae-dc3a-4a21-9fec-bc821c4453be\\\\tasks\\\\bdy6910hv.output\" -Tail 30)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
