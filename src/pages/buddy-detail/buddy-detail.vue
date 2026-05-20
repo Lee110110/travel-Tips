@@ -185,7 +185,7 @@ onShareAppMessage(() => {
             <text class="share-btn-text">分享</text>
           </button>
         </view>
-        <view class="apply-btn" :class="{ disabled: isFull }" @tap="openApply">
+        <view class="apply-btn" :class="{ disabled: isFull }" @tap="!isFull && openApply()">
           <text class="apply-text">{{ isFull ? '队伍已满' : '申请加入' }}</text>
         </view>
       </template>
