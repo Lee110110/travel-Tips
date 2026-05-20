@@ -14,14 +14,14 @@ const totalCities = computed(() => cityStore.allCities.length)
 
 const menuItems = [
   { section: '我的服务', items: [
-    { label: '搭子', icon: '🏕', desc: `${buddyStore.myTeams.length}个队伍`, path: '' },
+    { label: '搭子', icon: '🏕', desc: `${buddyStore.myTeams.length}个队伍`, path: '/pages/my-buddy/my-buddy' },
     { label: '我的旅行规划', icon: '📋', desc: '制定你的旅行计划', path: '/pages/my-travel/my-travel' },
     { label: '我的消息', icon: '💬', desc: '', path: '/pages/my-messages/my-messages' },
   ]},
   { section: '更多', items: [
     { label: '收藏', icon: '♥', desc: `${favoriteCount.value}个城市`, path: '/pages/favorites/favorites' },
     { label: '历史', icon: '🕐', desc: `已探索${discoveredCount.value}城`, path: '/pages/history/history' },
-    { label: '关于', icon: 'ℹ', desc: 'v1.0.0', path: '/pages/about/about' },
+    { label: '关于', icon: 'ℹ', desc: 'v1.1.0', path: '/pages/about/about' },
   ]},
 ]
 

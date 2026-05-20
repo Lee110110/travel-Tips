@@ -104,7 +104,12 @@ export async function applyToJoin(teamId: string, message: string): Promise<Budd
 
 export async function fetchMyTeams(): Promise<BuddyTeam[]> {
   await delay(200)
-  return mockTeams.filter(t => t.creatorId === 'me')
+  // Return teams I created + teams I joined (mock: include some joined teams for demo)
+  const created = mockTeams.filter(t => t.creatorId === 'me')
+  // Mock: simulate user joined t3 (三亚) and t4 (九寨沟)
+  const joinedIds = ['t3', 't4']
+  const joined = mockTeams.filter(t => joinedIds.includes(t.id) && t.creatorId !== 'me')
+  return [...created, ...joined]
 }
 
 export async function fetchMyApplications(): Promise<BuddyApplication[]> {

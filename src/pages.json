@@ -85,6 +85,14 @@
       }
     },
     {
+      "path": "pages/my-buddy/my-buddy",
+      "style": {
+        "navigationBarTitleText": "我的搭子",
+        "navigationBarBackgroundColor": "#FF6B35",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
       "path": "pages/my-messages/my-messages",
       "style": {
         "navigationBarTitleText": "我的消息",
