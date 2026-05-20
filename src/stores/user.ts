@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { UserLocation } from '@/types/city'
-import { getUserLocation } from '@/utils/location'
+import { getUserLocation, getIPLocation } from '@/utils/location'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -56,7 +56,15 @@ export const useUserStore = defineStore('user', () => {
       location.value = await getUserLocation()
       uni.setStorageSync('rt_location', JSON.stringify(location.value))
     } catch {
-      locationDenied.value = true
+      // GPS failed (common on HTTP in H5), try IP-based fallback
+      try {
+        location.value = await getIPLocation()
+        uni.setStorageSync('rt_location', JSON.stringify(location.value))
+        uni.showToast({ title: '已通过IP定位', icon: 'none' })
+      } catch {
+        locationDenied.value = true
+        uni.showToast({ title: '定位失败，请检查权限或使用HTTPS访问', icon: 'none', duration: 3000 })
+      }
     } finally {
       locationLoading.value = false
     }

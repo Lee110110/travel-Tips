@@ -34,9 +34,12 @@ const ALERT_TYPE_COLORS: Record<DestinationAlert['type'], string> = {
   currency: '#0984E3',
 }
 
-function loadGuide() {
+async function loadGuide() {
   if (!teamId.value) return
-  // Always regenerate to get fresh daily forecast
+  // Load teams first if lists are empty (e.g. opened via shared link in new session)
+  if (buddyStore.teamList.length === 0 && buddyStore.myTeams.length === 0) {
+    await buddyStore.loadTeams()
+  }
   const team = buddyStore.teamList.find(t => t.id === teamId.value)
     || buddyStore.myTeams.find(t => t.id === teamId.value)
   if (team) {
@@ -66,6 +69,26 @@ onShareAppMessage(() => {
   }
   return { title: 'AI旅行指南 - 搭伴', path: '/pages/buddy/buddy' }
 })
+
+function h5Share() {
+  const shareData = {
+    title: guide.value
+      ? `${guide.value.destination}出行指南 - AI旅行助手`
+      : 'AI旅行指南 - 搭伴',
+    text: guide.value
+      ? `${guide.value.destination}出行指南：天气、装备、行李清单一网打尽`
+      : '找搭子，备行囊，说走就走',
+    url: window.location.href,
+  }
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {})
+  } else {
+    uni.setClipboardData({
+      data: window.location.href,
+      success: () => uni.showToast({ title: '链接已复制，快去分享吧', icon: 'none' }),
+    })
+  }
+}
 
 const groupedLuggage = computed(() => {
   if (!guide.value) return []
@@ -112,9 +135,11 @@ const sceneEqDisplay = computed(() => {
         <text class="ai-title">AI 旅行助手</text>
         <text class="ai-desc">已为{{ guide.memberCount }}人小队生成出行指南</text>
       </view>
-      <button class="share-btn" open-type="share">
-        <text class="share-btn-icon">↗</text>
-      </button>
+      <view class="share-wrap" @tap="h5Share">
+        <button class="share-btn" open-type="share">
+          <text class="share-btn-icon">↗</text>
+        </button>
+      </view>
     </view>
 
     <!-- Destination Summary -->
@@ -306,6 +331,10 @@ const sceneEqDisplay = computed(() => {
 
 .ai-info {
   flex: 1;
+}
+
+.share-wrap {
+  flex-shrink: 0;
 }
 
 .share-btn {

@@ -11,9 +11,25 @@ const applyMessage = ref('')
 const closing = ref(false)
 const generating = ref(false)
 
-onLoad((options) => {
+onLoad(async (options) => {
   if (options?.id) {
-    const found = buddyStore.teamList.find(t => t.id === options.id)
+    // Try to find team in store first
+    let found = buddyStore.teamList.find(t => t.id === options.id)
+      || buddyStore.myTeams.find(t => t.id === options.id)
+
+    // If not found, load from server/mock
+    if (!found && buddyStore.teamList.length === 0) {
+      await buddyStore.loadTeams()
+      found = buddyStore.teamList.find(t => t.id === options.id)
+    }
+
+    // If still not found, try to restore from URL-encoded team data (shared link scenario)
+    if (!found && options.data) {
+      try {
+        found = JSON.parse(decodeURIComponent(options.data as string)) as BuddyTeam
+      } catch {}
+    }
+
     if (found) team.value = found
   }
 })
@@ -80,6 +96,27 @@ async function generateGuide() {
 
 function closeModal() {
   showApplyModal.value = false
+}
+
+function h5Share() {
+  if (!team.value) return
+  // Encode team data into URL so other users can see it from a shared link
+  const teamData = encodeURIComponent(JSON.stringify(team.value))
+  const baseUrl = window.location.origin + window.location.pathname
+  const shareUrl = `${baseUrl}#/pages/buddy-detail/buddy-detail?id=${team.value.id}&data=${teamData}`
+  const shareData = {
+    title: `${team.value.name} | ${team.value.departure}→${team.value.destination}，快来一起出发！`,
+    text: `${team.value.name} - ${team.value.departure}→${team.value.destination}，快来一起出发！`,
+    url: shareUrl,
+  }
+  if (navigator.share) {
+    navigator.share(shareData).catch(() => {})
+  } else {
+    uni.setClipboardData({
+      data: shareUrl,
+      success: () => uni.showToast({ title: '链接已复制，快去分享吧', icon: 'none' }),
+    })
+  }
 }
 
 onShareAppMessage(() => {
@@ -166,7 +203,7 @@ onShareAppMessage(() => {
     <view v-if="!isClosed" class="action-bar">
       <!-- Creator actions -->
       <template v-if="isCreator">
-        <view class="share-wrap">
+        <view class="share-wrap" @tap="h5Share">
           <button class="share-btn" open-type="share">
             <text class="share-btn-text">分享</text>
           </button>
@@ -180,7 +217,7 @@ onShareAppMessage(() => {
       </template>
       <!-- Member actions -->
       <template v-else>
-        <view class="share-wrap">
+        <view class="share-wrap" @tap="h5Share">
           <button class="share-btn" open-type="share">
             <text class="share-btn-text">分享</text>
           </button>
@@ -193,7 +230,7 @@ onShareAppMessage(() => {
 
     <!-- View Guide Button (for closed teams with guide) -->
     <view v-if="isClosed && hasGuide" class="action-bar">
-      <view class="share-wrap">
+      <view class="share-wrap" @tap="h5Share">
         <button class="share-btn" open-type="share">
           <text class="share-btn-text">分享</text>
         </button>
